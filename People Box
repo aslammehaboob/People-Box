@@ -1,1 +1,65 @@
+select *
+from responses;
+
+select *
+from employees;
+
+# Find all average of scores grouped by drivers.
+select
+driver_name,
+round(avg(score),1) as Average_score
+from responses
+group by driver_name;
+
+# Find all scores by department and driver combination
+select 
+department,
+driver_name,
+sum(score) as Total_Score
+from employees join responses
+group by department,driver_name;
+
+# Find all scores by location and driver combination
+select 
+Location,
+driver_name,
+sum(score) as Total_Score
+from employees join responses
+group by location,driver_name;
+
+# Find all scores by gender and driver
+select 
+gender,
+driver_name,
+sum(score) as Total_Score
+from employees join responses
+group by gender,driver_name;
+
+# Find all scores by age group 20-30, 30-40,40-50
+select
+case 
+when age between 20 and 30 then "20-30"
+when age between 30 and 40 then "30-40"
+when age between 40 and 50 then "40_50"
+end as age_range,
+sum(score) as Total_Score
+from employees join responses
+group by age_range;
+
+# Find all scores by managers (ensure manager name is there)
+select
+employee_id as Manager_id,
+name,
+sum(r.score) as Total_Score
+from employees e join responses r on (e.id =r.employee_id)
+group by employee_id,name;
+
+# Additionally, to ensure anonymity - if a group (eg: combination of department for a specific driver) has less than 3 responses - skip that group.
+select 
+score,
+department,
+sum(score) as total_score
+from employees join responses
+group by score,department
+having score >3;
 
